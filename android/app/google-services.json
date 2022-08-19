@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "512467387012",
+    "project_id": "my-vocab-builder",
+    "storage_bucket": "my-vocab-builder.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:512467387012:android:e6baa2705392e6f2c0f8d1",
+        "android_client_info": {
+          "package_name": "com.example.my_vocab"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "512467387012-8pvputgor7ogd43siv0innfrh5jcgt54.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-Pewb1WgzUFziWnX_V8XJR846-6NczRk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "512467387012-8pvputgor7ogd43siv0innfrh5jcgt54.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
