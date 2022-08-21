@@ -16,7 +16,7 @@ class FirebaseAuthMethods {
     } on FirebaseAuthException catch (error) {
       return error.message;
     } catch (error) {
-      return "Unknown error";
+      return "Unknown error occured";
     }
   }
 }

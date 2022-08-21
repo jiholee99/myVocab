@@ -20,7 +20,7 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
 
-  Widget textFieldContainerBuilder({required IconData icon, required Widget child, bool isPassword = false}) {
+  Widget textFieldContainerBuilder({required IconData icon, required Widget child, bool isPassword = false, Widget? passwordWidget}) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(color: Colors.grey.withOpacity(0.4), borderRadius: defaultBorderRadius),
@@ -39,13 +39,8 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
               width: 10,
             ),
           if (isPassword)
-            InkWell(
-                onTap: () {
-                  setState(() {
-                    _isPasswordVisible = !_isPasswordVisible;
-                  });
-                },
-                child: _isPasswordVisible ? Icon(Icons.remove_red_eye_outlined) : Icon(Icons.remove_red_eye_rounded))
+            if (passwordWidget != null)
+              passwordWidget
         ],
       ),
     );
@@ -77,7 +72,14 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
               decoration:
                   const InputDecoration(hintText: "Enter password", border: UnderlineInputBorder(borderSide: BorderSide.none)),
             ),
-            isPassword: true),
+            isPassword: true,
+            passwordWidget: InkWell(
+                onTap: () {
+                  setState(() {
+                    _isPasswordVisible = !_isPasswordVisible;
+                  });
+                },
+                child: _isPasswordVisible ? Icon(Icons.remove_red_eye_outlined) : Icon(Icons.remove_red_eye_rounded))),
         spacer,
 
         // Confirm password textfield
@@ -86,11 +88,18 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
             child: TextField(
               controller: widget.confirmPasswordFieldController,
               style: textFieldTextStyle,
-              obscureText: _isPasswordVisible ? false : true,
+              obscureText: _isConfirmPasswordVisible ? false : true,
               decoration:
                   const InputDecoration(hintText: "Confirm password", border: UnderlineInputBorder(borderSide: BorderSide.none)),
             ),
-            isPassword: true),
+            isPassword: true,
+            passwordWidget: InkWell(
+                onTap: () {
+                  setState(() {
+                    _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+                  });
+                },
+                child: _isConfirmPasswordVisible ? Icon(Icons.remove_red_eye_outlined) : Icon(Icons.remove_red_eye_rounded))),
         spacer,
       ],
     );
