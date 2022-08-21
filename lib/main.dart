@@ -10,6 +10,9 @@ import '../utils/global_constant.dart';
 import '../screen/welcome_screen.dart';
 import '../screen/sign_up_screen.dart';
 import '../screen/home_screen.dart';
+import '../screen/responsive/responsive_layout.dart';
+import '../screen/responsive/mobile_screen_layout.dart';
+import '../screen/responsive/web_screen_layout.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,7 +34,10 @@ class MyApp extends StatelessWidget {
           builder: (_, snapshot) {
             if (snapshot.connectionState == ConnectionState.active) {
               if (snapshot.hasData) {
-                
+                ResponsiveLayout(
+                  mobileScreenLayout: MobileScreenLayout(),
+                  webScreenLayout: WebScreenLayout(),
+                );
               }
             }
             return const WelcomeScreen();
@@ -39,7 +45,7 @@ class MyApp extends StatelessWidget {
       routes: {
         welcomeScreenPathName: (_) => const WelcomeScreen(),
         signUpScreenPathName: (_) => SignUpScreen(),
-        homeScreenPathName: (_)=>HomeScreen()
+        homeScreenPathName: (_) => HomeScreen()
       },
     );
   }
