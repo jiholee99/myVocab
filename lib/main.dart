@@ -9,6 +9,7 @@ import '../utils/global_constant.dart';
 //Screens
 import '../screen/welcome_screen.dart';
 import '../screen/sign_up_screen.dart';
+import '../screen/home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
       routes: {
         welcomeScreenPathName: (_) => const WelcomeScreen(),
         signUpScreenPathName: (_) => SignUpScreen(),
+        homeScreenPathName: (_)=>HomeScreen()
       },
     );
   }
