@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:my_vocab/screen/welcome_screen.dart';
 
+// Screen Size
+const webScreenSize = 600;
+
 //Colors
 const mobileBackgroundColor = Colors.black;
 const textColor = Colors.white;
