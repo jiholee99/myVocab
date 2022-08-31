@@ -2,11 +2,57 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:my_vocab/resources/firebase_auth_methods.dart';
+import 'package:my_vocab/screen/responsive/mobile_screen_layout.dart';
+import 'package:my_vocab/screen/responsive/responsive_layout.dart';
+import 'package:my_vocab/screen/responsive/web_screen_layout.dart';
 
 import '../utils/global_constant.dart';
 
-class WelcomeScreen extends StatelessWidget {
-  const WelcomeScreen({Key? key}) : super(key: key);
+import '../widgets/sign_in_form_widget.dart';
+
+class WelcomeScreen extends StatefulWidget {
+  WelcomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<WelcomeScreen> createState() => _WelcomeScreenState();
+}
+
+class _WelcomeScreenState extends State<WelcomeScreen> {
+  final emailFieldController = TextEditingController();
+  final passwordFieldController = TextEditingController();
+  bool _isSigningIn = false;
+
+  logInHandler() async {
+    setState(() {
+      _isSigningIn = true;
+    });
+    final messenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
+    final String? result = await FirebaseAuthMethods()
+        .signInWithEmailAndPassword(email: emailFieldController.text, password: passwordFieldController.text);
+    if (result != null) {
+      setState(() {
+        _isSigningIn = false;
+        emailFieldController.clear();
+        passwordFieldController.clear();
+      });
+      if (result == "Success") {
+        messenger.showSnackBar(resultSnackBarBuilder("Successfully loged in!"));
+        
+      } else {
+        messenger.showSnackBar(resultSnackBarBuilder(result.toString()));
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    emailFieldController.dispose();
+    passwordFieldController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,83 +67,31 @@ class WelcomeScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Flexible(
-                    child: Container(
-                        //\color: Colors.white,
-                        )),
+                Flexible(child: Container()),
                 // Title
                 const Text(
                   "My vocab",
                   style: titleTextStyle,
                 ),
                 spacer,
-                Form(
-                    child: Column(
-                  children: [
-                    // Email textfield
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      decoration: BoxDecoration(color: Colors.grey.withOpacity(0.4), borderRadius: defaultBorderRadius),
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.email_outlined,
-                            color: Colors.white,
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Flexible(
-                            child: TextFormField(
-                              style: textFieldTextStyle,
-                              decoration: const InputDecoration(
-                                  hintText: "Enter email address", border: UnderlineInputBorder(borderSide: BorderSide.none)),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    spacer,
-                    // Password textfield
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      decoration: BoxDecoration(color: Colors.grey.withOpacity(0.4), borderRadius: defaultBorderRadius),
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.key,
-                            color: Colors.white,
-                            size: 30,
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Flexible(
-                            child: TextFormField(
-                              style: textFieldTextStyle,
-                              decoration: const InputDecoration(
-                                  hintText: "Enter password", border: UnderlineInputBorder(borderSide: BorderSide.none)),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                )),
-
+                // Email and password textField
+                SignInFormWidget(emailFieldController: emailFieldController, passwordFieldController: passwordFieldController),
                 spacer,
                 // Login Button
                 InkWell(
+                  onTap: logInHandler,
                   child: Ink(
                     height: 50,
                     decoration: BoxDecoration(color: Colors.grey, borderRadius: defaultBorderRadius),
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     width: double.infinity,
                     child: Center(
-                        child: Text(
-                      "Log in",
-                      style: buttonTextStyle,
-                    )),
+                        child: _isSigningIn
+                            ? CircularProgressIndicator()
+                            : Text(
+                                "Log in",
+                                style: buttonTextStyle,
+                              )),
                   ),
                 ),
 
@@ -140,7 +134,7 @@ class WelcomeScreen extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                // Log in with google
+                      // Log in with google
                       Container(
                         decoration: BoxDecoration(borderRadius: defaultBorderRadius, color: Colors.white),
                         height: 50,
@@ -199,7 +193,6 @@ class WelcomeScreen extends StatelessWidget {
                   ),
                 ),
 
-                
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

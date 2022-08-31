@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:my_vocab/screen/responsive/mobile_screen_layout.dart';
+import 'package:my_vocab/screen/responsive/responsive_layout.dart';
+import 'package:my_vocab/screen/responsive/web_screen_layout.dart';
 import 'package:my_vocab/utils/form_validation.dart';
 import 'package:my_vocab/widgets/sign_up_form_widget.dart';
 
@@ -8,22 +11,39 @@ import '../resources/firebase_auth_methods.dart';
 
 import '../utils/global_constant.dart';
 
-class SignUpScreen extends StatelessWidget {
+class SignUpScreen extends StatefulWidget {
   SignUpScreen({Key? key}) : super(key: key);
+
+  @override
+  State<SignUpScreen> createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController emailFieldController = TextEditingController();
+
   final TextEditingController passwordFieldController = TextEditingController();
+
   final TextEditingController confirmPasswordFieldController = TextEditingController();
 
-  errorSnackBarBuilder(String errorMessage) {
-    return SnackBar(
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.grey[900],
-        shape: RoundedRectangleBorder(borderRadius: defaultBorderRadius, side: BorderSide(color: Colors.white, width: 3)),
-        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-        content: Text(
-          errorMessage,
-          style: snackbarTextStyle,
-        ));
+  logInHandler() async {
+    final messenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
+    final String? result = await FirebaseAuthMethods().signUpWithEmailAndPassword(
+        email: emailFieldController.text,
+        password: passwordFieldController.text,
+        confirmPassword: confirmPasswordFieldController.text);
+    messenger.clearSnackBars();
+    if (result == "Success") {
+      messenger.showSnackBar(resultSnackBarBuilder("Successfully signed up!"));
+      navigator.pushReplacement(MaterialPageRoute(
+        builder: (context) {
+          return ResponsiveLayout(webScreenLayout: WebScreenLayout(), mobileScreenLayout: MobileScreenLayout());
+        },
+      ));
+    } else {
+      
+      messenger.showSnackBar(resultSnackBarBuilder(result.toString()));
+    }
   }
 
   @override
@@ -52,20 +72,7 @@ class SignUpScreen extends StatelessWidget {
             spacer,
             // Sign up button
             InkWell(
-              onTap: () async {
-                final messenger = ScaffoldMessenger.of(context);
-                final navigator = Navigator.of(context);
-                final String? result = await FirebaseAuthMethods().signUpWithEmailAndPassword(
-                    email: emailFieldController.text,
-                    password: passwordFieldController.text,
-                    confirmPassword: confirmPasswordFieldController.text);
-                if (result == "Success") {
-                  navigator.pushReplacementNamed(homeScreenPathName);
-                } else {
-                  messenger.clearSnackBars();
-                  messenger.showSnackBar(errorSnackBarBuilder(result.toString()));
-                }
-              },
+              onTap: logInHandler,
               child: Ink(
                 height: 50,
                 decoration: BoxDecoration(color: Colors.grey, borderRadius: defaultBorderRadius),

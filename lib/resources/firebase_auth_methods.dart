@@ -19,4 +19,17 @@ class FirebaseAuthMethods {
       return "Unknown error occured";
     }
   }
+
+  Future<String?> signInWithEmailAndPassword({required String email, required String password}) async {
+    try {
+      print("Email : ${email}, Password : ${password}");
+      final user = await _auth.signInWithEmailAndPassword(email: email, password: password);
+      print(user.toString());
+      return "Success";
+    } on FirebaseAuthException catch (error) {
+      return error.message;
+    } catch (error) {
+      return error.toString();
+    }
+  }
 }

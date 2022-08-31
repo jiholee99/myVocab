@@ -29,3 +29,17 @@ const signUpScreenPathName = '/signUp';
 const homeScreenPathName = '/home';
 
 //Box
+
+// snackbar
+resultSnackBarBuilder(String resultMessage) {
+  return SnackBar(
+      duration: const Duration(milliseconds: 800),
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.grey[900],
+      shape: RoundedRectangleBorder(borderRadius: defaultBorderRadius, side: BorderSide(color: Colors.white, width: 3)),
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+      content: Text(
+        resultMessage,
+        style: snackbarTextStyle,
+      ));
+}

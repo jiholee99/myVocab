@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 // Firebase imports
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:my_vocab/resources/firebase_auth_methods.dart';
 import 'firebase_options.dart';
 
 // From the folders
@@ -9,7 +10,6 @@ import '../utils/global_constant.dart';
 //Screens
 import '../screen/welcome_screen.dart';
 import '../screen/sign_up_screen.dart';
-import '../screen/home_screen.dart';
 import '../screen/responsive/responsive_layout.dart';
 import '../screen/responsive/mobile_screen_layout.dart';
 import '../screen/responsive/web_screen_layout.dart';
@@ -32,20 +32,34 @@ class MyApp extends StatelessWidget {
       home: StreamBuilder(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (_, snapshot) {
+            
+            print("Build");
             if (snapshot.connectionState == ConnectionState.active) {
-              if (snapshot.hasData) {
-                ResponsiveLayout(
+              print(snapshot.data.toString()+" 2");
+              if (snapshot.data != null) {
+                return ResponsiveLayout(
                   mobileScreenLayout: MobileScreenLayout(),
                   webScreenLayout: WebScreenLayout(),
                 );
+              } else if (snapshot.data == null) {
+                return WelcomeScreen();
+              }
+
+              // If it's waiting for the auth state to come back
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
               }
             }
-            return const WelcomeScreen();
+            // if the user hasn't been authenticated
+            print("User not authenticated");
+            return WelcomeScreen();
+            
           }),
       routes: {
-        welcomeScreenPathName: (_) => const WelcomeScreen(),
+        welcomeScreenPathName: (_) => WelcomeScreen(),
         signUpScreenPathName: (_) => SignUpScreen(),
-        homeScreenPathName: (_) => HomeScreen()
       },
     );
   }
